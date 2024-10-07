@@ -21,22 +21,38 @@
 					then
 						if [ $opcion -eq 1 ]
 							then
-								echo "Realizando una copia de seguridad de el archivo dhcpd.conf ....."
-								sleep 2
-								cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.copy
-								read -p "Dime la direccion de red: " di_red
-								read -p "Dime la máscara de red: " netmask
-								read -p "Dime la ip de inicio del rango: " init_ip
-								read -p "Dime la ip de fin del rango: " end_ip
-								read -p "Dime la ip del servidor dns (si hay dos separadas por comas) : " ip_dns
-								read -p "Dime el nombre de dominio de la red (entre comillas): " d_red
-								read -p "Dime la puerta de enlace: " gateway
-								read -p "Dime la dirección de broadcast: " broadcast
-								read -p "Dime el tiempo por defecto de adjudicación: " def_lease
-								read -p "Dime el tiempo máximo de adjudicación: " max_lease
-								echo -e "subnet $di_red netmask $netmask {\n	range $init_ip $end_ip;\n	option domain-name-servers $ip_dns;\n	option domain-name $d_red;\n	option subnet-mask $netmask;\n	option routers $gateway;\n	option broadcast-address $broadcast;\n	default-lease-time $def_lease;\n	max-lease-time $max_lease;\n}" >> /etc/dhcp/dhcpd.conf
+								read -p "¿Cuantos ámbitos quieres configurar?: " ambitos
+								cont=1
+								if [ $(find /etc/dhcp/dhcpd.conf 2>/dev/null | wc -l) -gt 0 ]
+									then
+										mv /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.copy
+							 			echo "Realizando una copia de seguridad de el archivo dhcpd.conf ....."
+								else
+									echo "El archivo dhcpd.conf no existe... Omitiendo la copia..."
+								fi
+								sleep 3
+								while [ $cont -le $ambitos ]
+									do
+										clear
+										echo "Configurando el ámbito $cont"
+										sleep 2
+										read -p "Dime la direccion de red: " di_red
+										read -p "Dime la máscara de red: " netmask
+										read -p "Dime la ip de inicio del rango: " init_ip
+										read -p "Dime la ip de fin del rango: " end_ip
+										read -p "Dime la ip del servidor dns (si hay dos separadas por comas) : " ip_dns
+										read -p "Dime el nombre de dominio de la red (entre comillas): " d_red
+										read -p "Dime la puerta de enlace: " gateway
+										read -p "Dime la dirección de broadcast: " broadcast
+										read -p "Dime el tiempo por defecto de adjudicación: " def_lease
+										read -p "Dime el tiempo máximo de adjudicación: " max_lease
+										echo -e "subnet $di_red netmask $netmask {\n	range $init_ip $end_ip;\n	option domain-name-servers $ip_dns;\n	option domain-name $d_red;\n	option subnet-mask $netmask;\n	option routers $gateway;\n	option broadcast-address $broadcast;\n	default-lease-time $def_lease;\n	max-lease-time $max_lease;\n}" >> /etc/dhcp/dhcpd.conf
+										cont=$(($cont + 1))
+										clear
+									done
 						elif [ $opcion -eq 2 ]
 							then
+								clear
 								echo "Realizando copia de seguridad para el archivo isc-dhcp-server...."
 								sleep 2
 								cp /etc/defalt/isc-dhcp-server /etc/default/isc.copy
@@ -44,17 +60,22 @@
 								echo 'INTERFACESv4="$interfaz"' > /etc/default/isc-dhcp-server
 						elif [ $opcion -eq 3 ]
 							then
+								clear
 								read -p "Dime el nombre de host: " n_host
 								read -p "Dime la mac del host: " mac
 								read -p "Dime la ip reservada: " ip_reserva
 								echo -e "Host $n_host {\n   hardware ethernet $mac;\n   fixed-address $ip_reserva;\n}" > /etc/default/isc-dhcp-server
 						elif [ $opcion -eq 4 ]
 							then
+								clear
 								echo "Realizando una copia de seguridad de el archivo dhcpd.conf...."
 								sleep 2
 								rm /etc/dhcp/dhcpd.conf
 						elif [ $opcion -eq 5 ]
 							then
+								clear
+								echo "reiniciando servicio....."
+								sleep 3
 								systemctl restart isc-dhcp-server
 						elif [ $opcion -eq 6 ]
 							then
