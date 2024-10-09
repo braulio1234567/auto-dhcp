@@ -55,9 +55,15 @@
 								clear
 								echo "Realizando copia de seguridad para el archivo isc-dhcp-server...."
 								sleep 2
-								cp /etc/defalt/isc-dhcp-server /etc/default/isc.copy
-								read -p "Dime la interfaz por la que se va a repartir ip: " interfaz
-								echo 'INTERFACESv4="$interfaz"' > /etc/default/isc-dhcp-server
+								if [ $(find /etc/default/isc-dhcp-server 2>/dev/null | wc -l) -gt 0 ]
+									then
+										mv /etc/default/isc-dhcp-server /etc/default/isc-dhcp-server.copy
+							 			echo "Realizando una copia de seguridad de el archivo dhcpd.conf ....."
+								else
+									echo "El archivo isc-dhcp-server no existe... Omitiendo la copia..."
+								fi
+								read -p "Dime la interfaz por la que se va a repartir ip (entre comillas): " interfaz
+								echo "INTERFACESv4=$interfaz" > /etc/default/isc-dhcp-server
 						elif [ $opcion -eq 3 ]
 							then
 								clear
