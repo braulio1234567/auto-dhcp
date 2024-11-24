@@ -70,7 +70,7 @@
 								read -p "Dime el nombre de host: " n_host
 								read -p "Dime la mac del host: " mac
 								read -p "Dime la ip reservada: " ip_reserva
-								echo -e "Host $n_host {\n   hardware ethernet $mac;\n   fixed-address $ip_reserva;\n}" > /etc/default/isc-dhcp-server
+								echo -e "Host $n_host {\n   hardware ethernet $mac;\n   fixed-address $ip_reserva;\n}" >> /etc/dhcp/dhcpd.conf
 						elif [ $opcion -eq 4 ]
 							then
 								clear
